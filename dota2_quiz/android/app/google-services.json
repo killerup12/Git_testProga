@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "643640093710",
+    "project_id": "dota-2-quiz-7128e",
+    "storage_bucket": "dota-2-quiz-7128e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643640093710:android:9581a5c3c793687103e05f",
+        "android_client_info": {
+          "package_name": "com.example.dota2_quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643640093710-0h568ijjblit4fhv3hbovd9ffn7rr7rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwle_XGXET07UmgiGCRG3hOtHV48zlUls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643640093710-0h568ijjblit4fhv3hbovd9ffn7rr7rg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643640093710-ehbq7qhnhrg1enub4ls34gsnkogp6r6r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dota2Quiz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
