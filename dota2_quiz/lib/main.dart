@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Dota 2 Quiz!',
       theme: ThemeData(
-
         primarySwatch: Colors.red,
       ),
       home: new QuizScreen(),

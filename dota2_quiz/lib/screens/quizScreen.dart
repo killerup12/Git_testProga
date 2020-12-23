@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dota2_quiz/models/questionModel.dart';
+import 'package:dota2_quiz/tools/networkTools.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -78,16 +79,23 @@ class _QuestionWindowState extends State<QuestionWindow> {
   @override
   void initState() {
     super.initState();
+    checkInternet().checkConnection(context);
     Firebase.initializeApp().whenComplete(() {
       print("completed");
       setState(() {});
     });
     questionIndexLocal = questionIndex;
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 10; i++) {
       //todo Костыль!!!!
       CheckList.isAnswered[i] = "N";
     }
   }
+
+  // @override
+  // void dispose() {
+  //   checkInternet().listener.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +114,7 @@ class _QuestionWindowState extends State<QuestionWindow> {
             child: StreamBuilder(
               stream: dataBase,
               builder: (context, snapshot) {
+                try {
                 if (!snapshot.hasData) return CircularProgressIndicator();
 
                 countQuestions = snapshot.data.documents.length;
@@ -124,6 +133,9 @@ class _QuestionWindowState extends State<QuestionWindow> {
                     ),
                   ),
                 ); //todo add шрифт
+                } catch (Exception) {
+                  return CircularProgressIndicator();
+                }
               },
             ),
           ),
@@ -139,36 +151,37 @@ class _QuestionWindowState extends State<QuestionWindow> {
             child: StreamBuilder(
               stream: dataBase,
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return CircularProgressIndicator();
+                try {
+                  if (!snapshot.hasData) return CircularProgressIndicator();
 
-                String answerOptions = snapshot
-                    .data.documents[questionIndexLocal]["answerOptions"];
-                int localIndex = 0;
-                String localAnswer = "";
-                int numberOfAnswerOption = 1;
+                  String answerOptions = snapshot
+                      .data.documents[questionIndexLocal]["answerOptions"];
+                  int localIndex = 0;
+                  String localAnswer = "";
+                  int numberOfAnswerOption = 1;
 
-                futureType = snapshot.data
-                        .documents[(questionIndexLocal + 1) % countQuestions]
-                    ["type"];
+                  futureType = snapshot.data
+                      .documents[(questionIndexLocal + 1) % countQuestions]
+                  ["type"];
 
-                while (localIndex != answerOptions.length) {
-                  if (localIndex == 0) {
-                    localAnswer +=
-                        "$numberOfAnswerOption)  ${answerOptions[localIndex]}";
-                    numberOfAnswerOption++;
-                  } else if (answerOptions[localIndex] == ";") {
-                    localAnswer += "\n$numberOfAnswerOption) ";
-                    numberOfAnswerOption++;
-                  } else {
-                    localAnswer += answerOptions[localIndex];
+                  while (localIndex != answerOptions.length) {
+                    if (localIndex == 0) {
+                      localAnswer +=
+                      "$numberOfAnswerOption)  ${answerOptions[localIndex]}";
+                      numberOfAnswerOption++;
+                    } else if (answerOptions[localIndex] == ";") {
+                      localAnswer += "\n$numberOfAnswerOption) ";
+                      numberOfAnswerOption++;
+                    } else {
+                      localAnswer += answerOptions[localIndex];
+                    }
+                    localIndex++;
                   }
-                  localIndex++;
-                }
-                numberOfAnswerOption = 1;
+                  numberOfAnswerOption = 1;
 
-                if (localAnswer.isEmpty) {
-                  localAnswer = "Free answer!";
-                }
+                  if (localAnswer.isEmpty) {
+                    localAnswer = "Free answer!";
+                  }
 
                 return Center(
                   child: Padding(
@@ -181,6 +194,9 @@ class _QuestionWindowState extends State<QuestionWindow> {
                     ),
                   ),
                 ); //todo add шрифт
+                } catch (Exception) {
+                  return CircularProgressIndicator();
+                }
               },
             ),
           ),
@@ -392,10 +408,8 @@ class _QuestionWindowState extends State<QuestionWindow> {
 
                         child: InkWell(
                           child: Center(
-                              child: Text(
-                            "$textForSwitch1",
-                            style: TextStyle(fontSize: 30, color: Colors.white),
-                          )),
+                              child: _checkMark(textForSwitch1),
+                          ),
                           onTap: () {
                             setState(() {
                               textForSwitch1 = (textForSwitch1-1).abs();
@@ -422,10 +436,8 @@ class _QuestionWindowState extends State<QuestionWindow> {
 
                         child: InkWell(
                           child: Center(
-                              child: Text(
-                            "$textForSwitch2",
-                            style: TextStyle(fontSize: 30, color: Colors.white),
-                          )),
+                            child: _checkMark(textForSwitch2),
+                          ),
                           onTap: () {
                             setState(() {
                               textForSwitch2 = (textForSwitch2-2).abs();
@@ -457,10 +469,8 @@ class _QuestionWindowState extends State<QuestionWindow> {
 
                         child: InkWell(
                           child: Center(
-                              child: Text(
-                            "$textForSwitch3",
-                            style: TextStyle(fontSize: 30, color: Colors.white),
-                          )),
+                            child: _checkMark(textForSwitch3),
+                          ),
                           onTap: () {
                             setState(() {
                               textForSwitch3 = (textForSwitch3-3).abs();
@@ -487,10 +497,8 @@ class _QuestionWindowState extends State<QuestionWindow> {
 
                         child: InkWell(
                           child: Center(
-                              child: Text(
-                                "$textForSwitch4",
-                                style: TextStyle(fontSize: 30, color: Colors.white),
-                              )),
+                            child: _checkMark(textForSwitch4),
+                          ),
                           onTap: () {
                             setState(() {
                               textForSwitch4 = (textForSwitch4-4).abs();
@@ -626,6 +634,15 @@ class _QuestionWindowState extends State<QuestionWindow> {
 
   void doSetStateWithoutAnything() {
     setState(() {});
+  }
+
+  Widget _checkMark(int number) {
+    if (number != 0) {
+      return Text("$number",
+        style: TextStyle(fontSize: 30, color: Colors.white),);
+    } else {
+      return Icon(Icons.add, color: Colors.white,);
+    }
   }
 }
 
