@@ -13,7 +13,7 @@ class checkInternet {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: new Text("err"),
+              title: new Text("Dialog window"),
               content: new Text(content),
               actions: <Widget>[
                 new FlatButton(
@@ -30,11 +30,6 @@ class checkInternet {
   checkConnection(BuildContext context) async{
     listener = DataConnectionChecker().onStatusChange.listen((status) {
       switch (status){
-        case DataConnectionStatus.connected:
-          InternetStatus = "Connected to the Internet";
-          contentmessage = "Connected to the Internet";
-          _showDialog(InternetStatus,contentmessage,context);
-          break;
         case DataConnectionStatus.disconnected:
           InternetStatus = "You are disconnected to the Internet. ";
           contentmessage = "Please check your internet connection";
